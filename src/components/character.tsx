@@ -10,12 +10,12 @@ const Character: React.FC<CharacterProps> = ({ character }) => {
   const characterFavourites = useContext(FavouritesContext);
   const updateCharacterFavourites = useContext(UpdateFavouritesContext);
 
-  const toggleFavouriteForCharacter = (characterId: number): void => {
-    if (!characterFavourites.includes(characterId)) {
-      updateCharacterFavourites([...characterFavourites, characterId]);
+  const toggleFavouriteForCharacter = (character: DisneyCharacter): void => {
+    if (!characterFavourites.includes(character)) {
+      updateCharacterFavourites([...characterFavourites, character]);
     } else {
       const updatedFavourites = characterFavourites.filter(
-        (id) => id !== characterId
+        ({ _id }) => _id !== character._id
       );
       updateCharacterFavourites(updatedFavourites);
     }
@@ -26,9 +26,9 @@ const Character: React.FC<CharacterProps> = ({ character }) => {
 
       <button
         className="card__button "
-        onClick={() => toggleFavouriteForCharacter(character._id)}
+        onClick={() => toggleFavouriteForCharacter(character)}
       >
-        {!characterFavourites.includes(character._id)
+        {!characterFavourites.includes(character)
           ? "Add to Favourites"
           : "Favourited"}
       </button>

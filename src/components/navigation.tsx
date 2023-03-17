@@ -1,8 +1,16 @@
-// our props have two properties - a number, and a function that takes a number and returns void
-// we can define this as an interface, or anonymously like this:
-const Navigation: React.FC<{currentPage: number; setCurrentPage: (page: number) => void;}>
- = ({ currentPage, setCurrentPage }) => {
+interface NavigationProps {
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  favouriteClicked: Boolean;
+  setFavouriteClicked: (isFavourate: boolean) => void;
+}
 
+const Navigation: React.FC<NavigationProps> = ({
+  currentPage,
+  setCurrentPage,
+  setFavouriteClicked,
+  favouriteClicked,
+}) => {
   const nextPage = () => {
     const newPageNumber = currentPage + 1;
     setCurrentPage(newPageNumber);
@@ -17,21 +25,28 @@ const Navigation: React.FC<{currentPage: number; setCurrentPage: (page: number) 
 
   return (
     <div className="navigation">
+      {!favouriteClicked && (
+        <div className="navigation__item">
+          <button className="navigation__button" onClick={prevPage}>
+            Prev Page
+          </button>
+        </div>
+      )}
       <div className="navigation__item">
-        <button className="navigation__button" onClick={prevPage}>
-          Prev Page
+        <button
+          className="navigation__button"
+          onClick={() => setFavouriteClicked(!favouriteClicked)}
+        >
+          {favouriteClicked ? "Show All" : "Show Favourites"}
         </button>
       </div>
-      <div className="navigation__item">
-        <button className="navigation__button" onClick={prevPage}>
-          Show Favourites
-        </button>
-      </div>
-      <div className="navigation__item">
-        <button className="navigation__button" onClick={nextPage}>
-          Next Page
-        </button>
-      </div>
+      {!favouriteClicked && (
+        <div className="navigation__item">
+          <button className="navigation__button" onClick={nextPage}>
+            Next Page
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,9 +11,13 @@ const CharacterContainer: React.FC<CharacterContainerProps> = ({
 }) => {
   return (
     <div className="card-container">
-      {characters.map((character) => (
-        <Character key={character._id} character={character} />
-      ))}
+      {characters.length > 0 ? (
+        characters.map((character) => (
+          <Character key={character._id} character={character} />
+        ))
+      ) : (
+        <p className="header__page-count ">Nothing to show!</p>
+      )}
     </div>
   );
 };

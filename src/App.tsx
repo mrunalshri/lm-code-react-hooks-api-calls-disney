@@ -1,23 +1,28 @@
 import "./App.css";
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/header";
 import CharacterContainer from "./components/character_container";
 import Navigation from "./components/navigation";
 import { DisneyCharacter } from "./disney_character";
 
-export const FavouritesContext = React.createContext<number[]>([]);
+export const FavouritesContext = React.createContext<DisneyCharacter[]>([]);
 export const UpdateFavouritesContext = React.createContext<
-  Dispatch<SetStateAction<number[]>>
+  React.Dispatch<React.SetStateAction<DisneyCharacter[]>>
 >(() => null);
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // Some dummy state representing disney characters
   const [characters, setCharacters] = useState<Array<DisneyCharacter>>([]);
-  const [characterFavourites, setCharacterFavourites] = useState<Array<number>>(
-    []
-  );
+  const [characterFavourites, setCharacterFavourites] = useState<
+    Array<DisneyCharacter>
+  >([]);
+  const [favouriteClicked, setFavouriteClicked] = useState<Boolean>(false);
+
+  useEffect(() => {
+    if (!favouriteClicked) {
+      setCurrentPage(1);
+    }
+  }, [favouriteClicked]);
 
   useEffect(() => {
     const getCharacters = async (pageNumber: number) => {
@@ -34,12 +39,19 @@ const App: React.FC = () => {
     <FavouritesContext.Provider value={characterFavourites}>
       <UpdateFavouritesContext.Provider value={setCharacterFavourites}>
         <div className="page">
-          <Header currentPage={currentPage} />
+          <Header
+            currentPage={currentPage}
+            favouriteClicked={favouriteClicked}
+          />
           <Navigation
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            setFavouriteClicked={setFavouriteClicked}
+            favouriteClicked={favouriteClicked}
           />
-          <CharacterContainer characters={characters} />
+          <CharacterContainer
+            characters={favouriteClicked ? characterFavourites : characters}
+          />
         </div>
       </UpdateFavouritesContext.Provider>
     </FavouritesContext.Provider>
